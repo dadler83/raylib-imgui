@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(FetchContent)
 
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(BUILD_GAMES    OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(
   raylib
@@ -25,21 +25,26 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+FetchContent_Declare(
+  rlimgui
+  GIT_REPOSITORY https://github.com/raylib-extras/rlImGui.git
+  GIT_TAG main
+)
+FetchContent_MakeAvailable(rlimgui)
+
 add_executable(raylib_imgui
   src/main.cpp
-  ${imgui_SOURCE_DIR}/imgui.cpp
-  ${imgui_SOURCE_DIR}/imgui_draw.cpp
-  ${imgui_SOURCE_DIR}/imgui_tables.cpp
-  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
-  ${imgui_SOURCE_DIR}/backends/imgui_impl_raylib.cpp
 )
 
 target_include_directories(raylib_imgui PRIVATE
   ${imgui_SOURCE_DIR}
-  ${imgui_SOURCE_DIR}/backends
+  ${rlimgui_SOURCE_DIR}
 )
 
-target_link_libraries(raylib_imgui PRIVATE raylib)
+target_link_libraries(raylib_imgui PRIVATE
+  raylib
+  rlImGui
+)
 
 if (WIN32)
   target_link_libraries(raylib_imgui PRIVATE winmm)
